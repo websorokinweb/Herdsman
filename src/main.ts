@@ -1,5 +1,6 @@
 import { Application, Graphics, Text } from 'pixi.js'
-;(async () => {
+;import { Animal } from './Animal';
+(async () => {
 	const app = new Application()
 	await app.init({
 		resizeTo: window,
@@ -94,20 +95,12 @@ import { Application, Graphics, Text } from 'pixi.js'
 
 	mainHero = addMainHero()
 
-  function spawnAnimal(x: number, y: number) {
-    const newAnimal = new Graphics().circle(0, 0, 20).fill(0xffffff)
-
-		newAnimal.position.set(x, y)
-
-    app.stage.addChild(newAnimal)
-  }
-
   function spawnAnimals(){
     for (let i = 0; i < 10; i++) {
       const x = Math.floor(Math.random() * appWidth)
       const y = Math.floor(Math.random() * appHeight)
 
-      spawnAnimal(x, y)
+      new Animal(app, x, y)
     }
   }
 
