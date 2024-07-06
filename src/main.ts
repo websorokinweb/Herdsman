@@ -1,8 +1,10 @@
-import { Application, Graphics, Text } from 'pixi.js'
+import { Application, FederatedPointerEvent, Graphics, Text } from 'pixi.js'
 import { Animal } from './Animal'
 import addStyles from './addStyles'
 import { Player } from './Player'
-;(async () => {
+;import { DestinationField } from './DestinationField';
+import { GameField } from './GameField';
+(async () => {
 	const app = new Application()
 	await app.init({
 		resizeTo: window,
@@ -19,36 +21,21 @@ import { Player } from './Player'
 
 	app.stage.sortableChildren = true
 
-	let gameField: Graphics | null = null
-	let mainHero: Player = new Player(app)
-	let destinationField: Graphics | null = null
+	const gameField: GameField = new GameField(app, onGameFieldPointerDown)
+	const mainHero: Player = new Player(app)
+  const destinationField: DestinationField = new DestinationField(app)
 
 	let mainHeroScoreCounter: Text | null = null
 	const animals: Animal[] = []
 
-	function addGameField(): Graphics {
-		const gameField: Graphics = new Graphics()
-			.rect(0, 0, appWidth, appHeight)
-			.fill('#3B5D17')
-
-		app.stage.addChild(gameField)
-
-		gameField.on('pointerdown', (pointerDownEvent) => {
-			console.log({ pointerDownEvent })
-			mainHero.move(pointerDownEvent.x, pointerDownEvent.y)
-		})
-		gameField.eventMode = 'static'
-
-		return gameField
-	}
+  function onGameFieldPointerDown(pointerDownEvent: FederatedPointerEvent){
+    mainHero.move(pointerDownEvent.x, pointerDownEvent.y)
+  }
 
 	// console.log(app.ticker.deltaTime)
 	// console.log(app.ticker.minFPS)
 	// console.log(app.ticker.maxFPS)
 	// console.log(app.ticker.FPS)
-
-	gameField = addGameField()
-
 	function addMainHeroScoreCounter(): Text {
 		const mainHeroScoreCounter: Text = new Text({
 			text: '0',
@@ -68,23 +55,6 @@ import { Player } from './Player'
 	}
 
 	mainHeroScoreCounter = addMainHeroScoreCounter()
-
-	function addDestinationField(): Graphics {
-		const destinationField: Graphics = new Graphics()
-			.rect(0, 0, 300, 500)
-			.fill(0xf0e68c)
-
-		destinationField.position.set(
-			appWidth - 300,
-			appHeight / 2 - destinationField.height / 2,
-		)
-
-		app.stage.addChild(destinationField)
-
-		return destinationField
-	}
-
-	destinationField = addDestinationField()
 
 	function spawnAnimals() {
 		for (let i = 0; i < 10; i++) {
@@ -151,6 +121,5 @@ import { Player } from './Player'
         moveAnimalToPlayer(mainHero, animal)
       }
 		}
-
 	})
 })()
