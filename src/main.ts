@@ -4,6 +4,7 @@ import addStyles from './addStyles'
 import { Player } from './Player'
 ;import { DestinationField } from './DestinationField';
 import { GameField } from './GameField';
+import getRandomInt from './getRandomInt';
 (async () => {
 	const app = new Application()
 	await app.init({
@@ -57,7 +58,8 @@ import { GameField } from './GameField';
 	mainHeroScoreCounter = addMainHeroScoreCounter()
 
 	function spawnAnimals() {
-		for (let i = 0; i < 10; i++) {
+    const animalsCount = getRandomInt(6, 12)
+		for (let i = 0; i < animalsCount; i++) {
 			const x = Math.floor(Math.random() * appWidth)
 			const y = Math.floor(Math.random() * appHeight)
 
