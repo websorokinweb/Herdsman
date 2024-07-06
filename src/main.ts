@@ -21,6 +21,7 @@ import { Application, Graphics, Text } from 'pixi.js'
 	let destinationField: Graphics | null = null
 
   let mainHeroScoreCounter: Text | null = null
+  const animals: Graphics[] = []
 
 	function addGameField(): Graphics {
 		const gameField: Graphics = new Graphics()
@@ -92,6 +93,25 @@ import { Application, Graphics, Text } from 'pixi.js'
 	}
 
 	mainHero = addMainHero()
+
+  function spawnAnimal(x: number, y: number) {
+    const newAnimal = new Graphics().circle(0, 0, 20).fill(0xffffff)
+
+		newAnimal.position.set(x, y)
+
+    app.stage.addChild(newAnimal)
+  }
+
+  function spawnAnimals(){
+    for (let i = 0; i < 10; i++) {
+      const x = Math.floor(Math.random() * appWidth)
+      const y = Math.floor(Math.random() * appHeight)
+
+      spawnAnimal(x, y)
+    }
+  }
+
+  spawnAnimals()
 })()
 
 function addStyles(): void {
