@@ -1,6 +1,6 @@
 import { Application, Graphics, Text } from 'pixi.js'
-;import { Animal } from './Animal';
-(async () => {
+import { Animal } from './Animal'
+;(async () => {
 	const app = new Application()
 	await app.init({
 		resizeTo: window,
@@ -15,14 +15,14 @@ import { Application, Graphics, Text } from 'pixi.js'
 	const appWidth = app.screen.width
 	const appHeight = app.screen.height
 
-  app.stage.sortableChildren = true
+	app.stage.sortableChildren = true
 
 	let gameField: Graphics | null = null
 	let mainHero: Graphics | null = null
 	let destinationField: Graphics | null = null
 
-  let mainHeroScoreCounter: Text | null = null
-  const animals: Graphics[] = []
+	let mainHeroScoreCounter: Text | null = null
+	const animals: Animal[] = []
 
 	function addGameField(): Graphics {
 		const gameField: Graphics = new Graphics()
@@ -40,44 +40,49 @@ import { Application, Graphics, Text } from 'pixi.js'
 		return gameField
 	}
 
-  // console.log(app.ticker.deltaTime)
-  // console.log(app.ticker.minFPS)
-  // console.log(app.ticker.maxFPS)
-  // console.log(app.ticker.FPS)
+	// console.log(app.ticker.deltaTime)
+	// console.log(app.ticker.minFPS)
+	// console.log(app.ticker.maxFPS)
+	// console.log(app.ticker.FPS)
 
 	gameField = addGameField()
 
-  function addMainHeroScoreCounter(): Text {
-    const mainHeroScoreCounter: Text = new Text({
-      text: '0',
-      style: {
-        fill: 0xFFFFFF,
-        fontSize: 24
-      }
-    })
+	function addMainHeroScoreCounter(): Text {
+		const mainHeroScoreCounter: Text = new Text({
+			text: '0',
+			style: {
+				fill: 0xffffff,
+				fontSize: 24,
+			},
+		})
 
-    mainHeroScoreCounter.position.set(10, 10)
+		mainHeroScoreCounter.position.set(10, 10)
 
-    mainHeroScoreCounter.zIndex = 9999
+		mainHeroScoreCounter.zIndex = 9999
 
-    app.stage.addChild(mainHeroScoreCounter)
+		app.stage.addChild(mainHeroScoreCounter)
 
-    return mainHeroScoreCounter
-  }
+		return mainHeroScoreCounter
+	}
 
-  mainHeroScoreCounter = addMainHeroScoreCounter()
+	mainHeroScoreCounter = addMainHeroScoreCounter()
 
-  function addDestinationField(): Graphics {
-    const destinationField: Graphics = new Graphics().rect(0, 0, 300, 500).fill(0xF0E68C)
+	function addDestinationField(): Graphics {
+		const destinationField: Graphics = new Graphics()
+			.rect(0, 0, 300, 500)
+			.fill(0xf0e68c)
 
-    destinationField.position.set(appWidth - 300, (appHeight / 2) - destinationField.height / 2)
+		destinationField.position.set(
+			appWidth - 300,
+			appHeight / 2 - destinationField.height / 2,
+		)
 
-    app.stage.addChild(destinationField)
+		app.stage.addChild(destinationField)
 
-    return destinationField
-  }
+		return destinationField
+	}
 
-  destinationField = addDestinationField()
+	destinationField = addDestinationField()
 
 	function addMainHero(): Graphics {
 		const mainHero: Graphics = new Graphics().circle(0, 0, 25).fill(0xff0000)
@@ -95,16 +100,38 @@ import { Application, Graphics, Text } from 'pixi.js'
 
 	mainHero = addMainHero()
 
-  function spawnAnimals(){
-    for (let i = 0; i < 10; i++) {
-      const x = Math.floor(Math.random() * appWidth)
-      const y = Math.floor(Math.random() * appHeight)
+	function spawnAnimals() {
+		for (let i = 0; i < 10; i++) {
+			const x = Math.floor(Math.random() * appWidth)
+			const y = Math.floor(Math.random() * appHeight)
 
-      new Animal(app, x, y)
+			const newAnimal = new Animal(app, x, y)
+      animals.push(newAnimal)
+		}
+	}
+
+	spawnAnimals()
+
+	app.ticker.add((ticker) => {
+    if(mainHero == null || mainHero == undefined){
+      return
     }
-  }
 
-  spawnAnimals()
+    if(animals.length == 0){
+      return
+    }
+
+    for (const animal of animals) {
+      const distance = Math.sqrt(
+        Math.pow(mainHero.x - animal.getX(), 2) + Math.pow(mainHero.y - animal.getY(), 2),
+      )
+
+      if (distance < 70) {
+        animal.move(0, 0)
+      }
+    }
+
+	})
 })()
 
 function addStyles(): void {
