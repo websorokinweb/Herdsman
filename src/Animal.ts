@@ -4,11 +4,15 @@ export class Animal {
   private app: Application<Renderer>;
 
   private animalGraphics: Graphics;
+
+  private didReachDestination: boolean;
   
   constructor(app: Application<Renderer>, x: number, y: number) { 
     this.app = app
 
     this.animalGraphics = this.spawn(x, y)
+
+    this.didReachDestination = false
   }
 
   private spawn(x: number, y: number): Graphics{
@@ -32,5 +36,13 @@ export class Animal {
 
   getY(): number {
     return this.animalGraphics.y
+  }
+
+  getDidReachDestination(): boolean {
+    return this.didReachDestination
+  }
+
+  setDidReachDestination(didReachDestination: boolean): void {
+    this.didReachDestination = didReachDestination
   }
 }

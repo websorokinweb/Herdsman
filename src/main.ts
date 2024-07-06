@@ -122,6 +122,13 @@ import getRandomInt from './getRandomInt';
       if(mainHero.isAnimalInGroup(animal)){
         moveAnimalToPlayer(mainHero, animal)
       }
+
+      if (!animal.getDidReachDestination() && destinationField.isAnimalOnTheTerritory(animal)) {
+        animal.setDidReachDestination(true)
+        mainHero.incrementScore()
+        mainHeroScoreCounter.text = mainHero.getScore()
+        // mainHero.removeAnimalFromGroup(animal)
+      }
 		}
 	})
 })()

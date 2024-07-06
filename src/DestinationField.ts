@@ -1,4 +1,5 @@
 import { Application, Graphics, Renderer } from "pixi.js";
+import { Animal } from "./Animal";
 
 export class DestinationField{
   private app: Application<Renderer>;
@@ -25,5 +26,27 @@ export class DestinationField{
     newDestinationField.zIndex = 1000
 
 		return newDestinationField
+  }
+
+  isAnimalOnTheTerritory(animal: Animal): boolean {
+    const animalX = animal.getX()
+    const animalY = animal.getY()
+
+    const destinationFieldX = this.destinationFieldGraphics.x
+    const destinationFieldY = this.destinationFieldGraphics.y
+
+    const destinationFieldWidth = this.destinationFieldGraphics.width
+    const destinationFieldHeight = this.destinationFieldGraphics.height
+
+    if(
+      animalX >= destinationFieldX &&
+      animalX <= destinationFieldX + destinationFieldWidth &&
+      animalY >= destinationFieldY &&
+      animalY <= destinationFieldY + destinationFieldHeight
+    ) {
+      return true
+    }
+
+    return false
   }
 }

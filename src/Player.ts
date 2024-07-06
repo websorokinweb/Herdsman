@@ -20,10 +20,6 @@ export class Player {
     this.animalsGroup = []
   }
 
-  incrementScore(): void {
-    this.score += 1
-  }
-
   private spawn(): Graphics{
     const newPlayer: Graphics = new Graphics().circle(0, 0, 25).fill(0xff0000)
 
@@ -33,6 +29,15 @@ export class Player {
     newPlayer.zIndex = 2000
 
 		return newPlayer
+  }
+
+  getScore(): number {
+    return this.score
+  }
+
+  incrementScore(): void {
+    this.score += 1
+    console.log('incrementScore', this.score)
   }
 
   move(x: number, y: number) {
