@@ -1,6 +1,8 @@
 import { Application, Graphics, Text } from 'pixi.js'
 import { Animal } from './Animal'
-;(async () => {
+import addStyles from './addStyles'
+;import { Player } from './Player';
+(async () => {
 	const app = new Application()
 	await app.init({
 		resizeTo: window,
@@ -18,7 +20,7 @@ import { Animal } from './Animal'
 	app.stage.sortableChildren = true
 
 	let gameField: Graphics | null = null
-	let mainHero: Graphics | null = null
+	let mainHero: Player = new Player(app)
 	let destinationField: Graphics | null = null
 
 	let mainHeroScoreCounter: Text | null = null
@@ -33,7 +35,7 @@ import { Animal } from './Animal'
 
 		gameField.on('pointerdown', (pointerDownEvent) => {
 			console.log({ pointerDownEvent })
-			moveMainHero(pointerDownEvent.x, pointerDownEvent.y)
+      mainHero.move(pointerDownEvent.x, pointerDownEvent.y)
 		})
 		gameField.eventMode = 'static'
 
@@ -84,59 +86,36 @@ import { Animal } from './Animal'
 
 	destinationField = addDestinationField()
 
-	function addMainHero(): Graphics {
-		const mainHero: Graphics = new Graphics().circle(0, 0, 25).fill(0xff0000)
-
-		mainHero?.position.set(appWidth / 2, appHeight / 2)
-
-		app.stage.addChild(mainHero)
-
-		return mainHero
-	}
-
-	function moveMainHero(x: number, y: number) {
-		mainHero?.position.set(x, y)
-	}
-
-	mainHero = addMainHero()
-
 	function spawnAnimals() {
 		for (let i = 0; i < 10; i++) {
 			const x = Math.floor(Math.random() * appWidth)
 			const y = Math.floor(Math.random() * appHeight)
 
 			const newAnimal = new Animal(app, x, y)
-      animals.push(newAnimal)
+			animals.push(newAnimal)
 		}
 	}
 
 	spawnAnimals()
 
 	app.ticker.add((ticker) => {
-    if(mainHero == null || mainHero == undefined){
-      return
-    }
+		if (mainHero == null || mainHero == undefined) {
+			return
+		}
 
-    if(animals.length == 0){
-      return
-    }
+		if (animals.length == 0) {
+			return
+		}
 
-    for (const animal of animals) {
-      const distance = Math.sqrt(
-        Math.pow(mainHero.x - animal.getX(), 2) + Math.pow(mainHero.y - animal.getY(), 2),
-      )
+		for (const animal of animals) {
+			const distance = Math.sqrt(
+				Math.pow(mainHero.getX() - animal.getX(), 2) +
+					Math.pow(mainHero.getY() - animal.getY(), 2),
+			)
 
-      if (distance < 70) {
-        animal.move(0, 0)
-      }
-    }
-
+			if (distance < 70) {
+				animal.move(0, 0)
+			}
+		}
 	})
 })()
-
-function addStyles(): void {
-	const link = document.createElement('link')
-	link.rel = 'stylesheet'
-	link.href = 'src/style.css'
-	document.head.appendChild(link)
-}

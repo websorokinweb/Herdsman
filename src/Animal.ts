@@ -17,6 +17,7 @@ export class Animal {
 		animalGraphic.position.set(x, y)
 
     this.app.stage.addChild(animalGraphic)
+    animalGraphic.zIndex = 3000
 
     return animalGraphic
   }
