@@ -3,12 +3,12 @@ import { Application, Graphics, Renderer } from "pixi.js";
 export class Animal {
   private app: Application<Renderer>;
 
-  private animalGraphic: Graphics;
+  private animalGraphics: Graphics;
   
   constructor(app: Application<Renderer>, x: number, y: number) { 
     this.app = app
 
-    this.animalGraphic = this.spawn(x, y)
+    this.animalGraphics = this.spawn(x, y)
   }
 
   private spawn(x: number, y: number): Graphics{
@@ -23,14 +23,14 @@ export class Animal {
   }
 
   move(x: number, y: number) {
-    this.animalGraphic.position.set(x, y)
+    this.animalGraphics.position.set(x, y)
   }
 
   getX(): number {
-    return this.animalGraphic.x
+    return this.animalGraphics.x
   }
 
   getY(): number {
-    return this.animalGraphic.y
+    return this.animalGraphics.y
   }
 }

@@ -1,8 +1,8 @@
 import { Application, Graphics, Text } from 'pixi.js'
 import { Animal } from './Animal'
 import addStyles from './addStyles'
-;import { Player } from './Player';
-(async () => {
+import { Player } from './Player'
+;(async () => {
 	const app = new Application()
 	await app.init({
 		resizeTo: window,
@@ -35,7 +35,7 @@ import addStyles from './addStyles'
 
 		gameField.on('pointerdown', (pointerDownEvent) => {
 			console.log({ pointerDownEvent })
-      mainHero.move(pointerDownEvent.x, pointerDownEvent.y)
+			mainHero.move(pointerDownEvent.x, pointerDownEvent.y)
 		})
 		gameField.eventMode = 'static'
 
@@ -98,6 +98,32 @@ import addStyles from './addStyles'
 
 	spawnAnimals()
 
+  function moveAnimalToPlayer(mainHero: Player, animal: Animal) {
+    const xDistance = mainHero.getX() - animal.getX()
+    const yDistance = mainHero.getY() - animal.getY()
+
+    let xDirection = 0
+    let yDirection = 0
+
+    if(xDistance != 0){
+      if(xDistance > 0){
+        xDirection = 1
+      } else {
+        xDirection = -1
+      }
+    }
+
+    if(yDistance != 0){
+      if(yDistance > 0){
+        yDirection = 1
+      } else {
+        yDirection = -1
+      }
+    }
+
+    animal.move(animal.getX() + xDirection, animal.getY() + yDirection)
+  }
+
 	app.ticker.add((ticker) => {
 		if (mainHero == null || mainHero == undefined) {
 			return
@@ -114,8 +140,12 @@ import addStyles from './addStyles'
 			)
 
 			if (distance < 70) {
-				animal.move(0, 0)
-			}
+				// animal.move(0, 0)
+        mainHero.addAnimalToGroup(animal)
+      }
+
+      moveAnimalToPlayer(mainHero, animal)
 		}
+
 	})
 })()

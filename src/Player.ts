@@ -1,14 +1,19 @@
 import { Application, Graphics, Renderer } from "pixi.js";
+import { Animal } from "./Animal";
 
 export class Player {
   private app: Application<Renderer>;
 
   private playerGraphics: Graphics;
 
+  private animalsGroup: Animal[];
+
   constructor(app: Application<Renderer>) {
     this.app = app
 
     this.playerGraphics = this.spawn()
+
+    this.animalsGroup = []
   }
 
   private spawn(): Graphics{
@@ -32,5 +37,13 @@ export class Player {
 
   getY(): number {
     return this.playerGraphics.y
+  }
+
+  addAnimalToGroup(animal: Animal): void {
+    if(this.animalsGroup.length >= 5) {
+      return
+    }
+
+    this.animalsGroup.push(animal)
   }
 }
