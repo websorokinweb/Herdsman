@@ -140,11 +140,16 @@ import { Player } from './Player'
 			)
 
 			if (distance < 70) {
-				// animal.move(0, 0)
         mainHero.addAnimalToGroup(animal)
       }
+      
+      if(distance > 600){
+        mainHero.removeAnimalFromGroup(animal)
+      }
 
-      moveAnimalToPlayer(mainHero, animal)
+      if(mainHero.isAnimalInGroup(animal)){
+        moveAnimalToPlayer(mainHero, animal)
+      }
 		}
 
 	})

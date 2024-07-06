@@ -40,10 +40,24 @@ export class Player {
   }
 
   addAnimalToGroup(animal: Animal): void {
+    if(this.isAnimalInGroup(animal)) {
+      return
+    }
+
     if(this.animalsGroup.length >= 5) {
       return
     }
 
+    console.log(this.animalsGroup)
+
     this.animalsGroup.push(animal)
+  }
+
+  removeAnimalFromGroup(animal: Animal): void {
+    this.animalsGroup = this.animalsGroup.filter((animalInGroup) => animalInGroup != animal)
+  }
+
+  isAnimalInGroup(animal: Animal): boolean {
+    return this.animalsGroup.includes(animal)
   }
 }
