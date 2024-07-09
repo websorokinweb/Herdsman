@@ -47,10 +47,7 @@ export default class GameHandler {
 
 		new GameField(this.app, onGameFieldPointerDown)
 
-		const addAnimal: (newAnimal: Animal) => void = (newAnimal: Animal) => {
-			this.animals.push(newAnimal)
-		}
-		const animalSpawner = new AnimalsSpawner(this.app, addAnimal)
+		const animalSpawner = new AnimalsSpawner(this.app, this.animals)
 		animalSpawner.init()
 
 		this.mainHero.spawn()

@@ -7,15 +7,11 @@ const MAX_ANIMALS_COUNT_TO_SPAWN: number = 12
 
 export class AnimalsSpawner {
 	private app: Application<Renderer>
-	private addAnimal: (newAnimal: Animal) => void
+	private animals: Animal[] = []
 
-	constructor(
-		app: Application<Renderer>,
-		addAnimal: (newAnimal: Animal) => void,
-	) {
+	constructor(app: Application<Renderer>, animals: Animal[]) {
 		this.app = app
-
-		this.addAnimal = addAnimal
+		this.animals = animals
 	}
 
 	init(): void {
@@ -33,7 +29,7 @@ export class AnimalsSpawner {
 
 			const newAnimal = new Animal(this.app)
 			newAnimal.spawn(x, y)
-			this.addAnimal(newAnimal)
+			this.animals.push(newAnimal)
 		}
 	}
 }
