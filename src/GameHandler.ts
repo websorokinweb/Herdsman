@@ -7,6 +7,12 @@ import Animal from './Animal'
 import EntityHandler from './EntityHandler'
 import GameScore from './GameScore'
 
+const MIN_ANIMALS_COUNT_TO_SPAWN: number = 6
+const MAX_ANIMALS_COUNT_TO_SPAWN: number = 12
+
+const ANIMAL_CAN_JOIN_GROUP_DISTANCE: number = 70
+const ANIMAL_TOO_FAR_FROM_MAIN_HERO_DISTANCE: number = 500
+
 export default class GameHandler {
 	private app: Application<Renderer>
 
@@ -62,11 +68,13 @@ export default class GameHandler {
 				const distanceToMainHero: number =
 					EntityHandler.getDistanceBetweenEntities(this.mainHero, animal)
 
-				if (distanceToMainHero < 70) {
+				const canAnimalJoinGroup: boolean = distanceToMainHero < ANIMAL_CAN_JOIN_GROUP_DISTANCE
+				if (canAnimalJoinGroup) {
 					this.mainHero.addAnimalToGroup(animal)
 				}
 
-				if (distanceToMainHero > 600) {
+				const isAnimalTooFarFromMainHero: boolean = distanceToMainHero > ANIMAL_TOO_FAR_FROM_MAIN_HERO_DISTANCE
+				if (isAnimalTooFarFromMainHero) {
 					this.mainHero.removeAnimalFromGroup(animal)
 				}
 
@@ -86,7 +94,7 @@ export default class GameHandler {
 	}
 
 	private spawnAnimals(): void {
-		const animalsCount = getRandomInt(6, 12)
+		const animalsCount = getRandomInt(MIN_ANIMALS_COUNT_TO_SPAWN, MAX_ANIMALS_COUNT_TO_SPAWN)
 		for (let i = 0; i < animalsCount; i++) {
 			const x = Math.floor(Math.random() * this.getAppWidth())
 			const y = Math.floor(Math.random() * this.getAppHeight())
