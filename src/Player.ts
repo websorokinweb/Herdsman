@@ -107,4 +107,50 @@ export default class Player implements Entity, HasScore {
 	isAnimalInGroup(animal: Animal): boolean {
 		return this.animalsGroup.includes(animal)
 	}
+
+	handleAnimalGroup(): void {
+		if (this.animalsGroup.length == 0) {
+			return
+		}
+
+		for (const animal of this.animalsGroup) {
+			this.moveAnimalToPlayer(animal)
+		}
+	}
+
+	private moveAnimalToPlayer(animal: Animal): void {
+		const xDistance = this.getX() - animal.getX()
+		const yDistance = this.getY() - animal.getY()
+		const xAbsoluteDistance = Math.abs(xDistance)
+		const yAbsoluteDistance = Math.abs(yDistance)
+
+		const isAnimalTooCloseToHero: boolean =
+			xAbsoluteDistance < this.getWidth() &&
+			yAbsoluteDistance < this.getHeight()
+
+		if (isAnimalTooCloseToHero) {
+			return
+		}
+
+		let xDirection = 0
+		let yDirection = 0
+
+		if (xDistance != 0) {
+			if (xDistance > 0) {
+				xDirection = 1
+			} else {
+				xDirection = -1
+			}
+		}
+
+		if (yDistance != 0) {
+			if (yDistance > 0) {
+				yDirection = 1
+			} else {
+				yDirection = -1
+			}
+		}
+
+		animal.move(animal.getX() + xDirection, animal.getY() + yDirection)
+	}
 }

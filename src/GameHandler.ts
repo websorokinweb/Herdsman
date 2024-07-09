@@ -3,12 +3,9 @@ import GameField from './GameField'
 import Player from './Player'
 import DestinationField from './DestinationField'
 import Animal from './Animal'
-import EntityHandler from './EntityHandler'
 import GameScore from './GameScore'
 import { AnimalsSpawner } from './AnimalsSpawner'
-
-const ANIMAL_CAN_JOIN_GROUP_DISTANCE: number = 70
-const ANIMAL_TOO_FAR_FROM_MAIN_HERO_DISTANCE: number = 500
+import AnimalsHandler from './AnimalsHandler'
 
 export default class GameHandler {
 	private app: Application<Renderer>
@@ -33,25 +30,32 @@ export default class GameHandler {
 	init(): void {
 		this.app.stage.sortableChildren = true
 
+		const onGameFieldPointerDown = (
+			pointerDownEvent: FederatedPointerEvent,
+		) => {
+			this.mainHero?.move(pointerDownEvent.x, pointerDownEvent.y)
+		}
+		new GameField(this.app, onGameFieldPointerDown)
+
 		this.mainHero = new Player(this.app)
 		this.mainHero.spawn()
 
 		this.gameScore = new GameScore(this.app, this.mainHero)
 		this.gameScore.init()
 
-		const onGameFieldPointerDown = (
-			pointerDownEvent: FederatedPointerEvent,
-		) => {
-			this.mainHero?.move(pointerDownEvent.x, pointerDownEvent.y)
-		}
-
-		new GameField(this.app, onGameFieldPointerDown)
-
 		const animalSpawner = new AnimalsSpawner(this.app, this.animals)
 		animalSpawner.init()
 
 		this.destinationField = new DestinationField(this.app)
 		this.destinationField.init()
+
+		const animalsHandler: AnimalsHandler = new AnimalsHandler(
+			this.app,
+			this.animals,
+			this.mainHero,
+			this.gameScore,
+			this.destinationField,
+		)
 
 		this.app.ticker.add(() => {
 			if (this.mainHero === null || this.destinationField === null) {
@@ -62,70 +66,10 @@ export default class GameHandler {
 				return
 			}
 
-			for (const animal of this.animals) {
-				const distanceToMainHero: number =
-					EntityHandler.getDistanceBetweenEntities(this.mainHero, animal)
+			animalsHandler.handleAnimalGroups()
+			animalsHandler.handleGameScore()
 
-				const canAnimalJoinGroup: boolean =
-					distanceToMainHero < ANIMAL_CAN_JOIN_GROUP_DISTANCE
-				if (canAnimalJoinGroup) {
-					this.mainHero.addAnimalToGroup(animal)
-				}
-
-				const isAnimalTooFarFromMainHero: boolean =
-					distanceToMainHero > ANIMAL_TOO_FAR_FROM_MAIN_HERO_DISTANCE
-				if (isAnimalTooFarFromMainHero) {
-					this.mainHero.removeAnimalFromGroup(animal)
-				}
-
-				if (this.mainHero.isAnimalInGroup(animal)) {
-					this.moveAnimalToPlayer(this.mainHero, animal)
-				}
-
-				if (
-					!animal.getDidReachDestination() &&
-					this.destinationField.isEntityOnTheTerritory(animal)
-				) {
-					animal.setDidReachDestination(true)
-					this.gameScore?.incrementScore()
-				}
-			}
+			this.mainHero.handleAnimalGroup()
 		})
-	}
-
-	moveAnimalToPlayer(mainHero: Player, animal: Animal): void {
-		const xDistance = mainHero.getX() - animal.getX()
-		const yDistance = mainHero.getY() - animal.getY()
-		const xAbsoluteDistance = Math.abs(xDistance)
-		const yAbsoluteDistance = Math.abs(yDistance)
-
-		const isAnimalTooCloseToHero: boolean =
-			xAbsoluteDistance < mainHero.getWidth() &&
-			yAbsoluteDistance < mainHero.getHeight()
-
-		if (isAnimalTooCloseToHero) {
-			return
-		}
-
-		let xDirection = 0
-		let yDirection = 0
-
-		if (xDistance != 0) {
-			if (xDistance > 0) {
-				xDirection = 1
-			} else {
-				xDirection = -1
-			}
-		}
-
-		if (yDistance != 0) {
-			if (yDistance > 0) {
-				yDirection = 1
-			} else {
-				yDirection = -1
-			}
-		}
-
-		animal.move(animal.getX() + xDirection, animal.getY() + yDirection)
 	}
 }
