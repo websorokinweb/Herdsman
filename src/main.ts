@@ -34,10 +34,6 @@ import getRandomInt from './getRandomInt'
 		mainHero.move(pointerDownEvent.x, pointerDownEvent.y)
 	}
 
-	// console.log(app.ticker.deltaTime)
-	// console.log(app.ticker.minFPS)
-	// console.log(app.ticker.maxFPS)
-	// console.log(app.ticker.FPS)
 	function addMainHeroScoreCounter(): Text {
 		const mainHeroScoreCounter: Text = new Text({
 			text: '0',
@@ -132,7 +128,6 @@ import getRandomInt from './getRandomInt'
 				animal.setDidReachDestination(true)
 				mainHero.incrementScore()
 				mainHeroScoreCounter.text = mainHero.getScore()
-				// mainHero.removeAnimalFromGroup(animal)
 			}
 		}
 	})
