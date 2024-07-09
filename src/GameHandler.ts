@@ -2,7 +2,6 @@ import { Application, FederatedPointerEvent, Renderer } from 'pixi.js'
 import GameField from './GameField'
 import Player from './Player'
 import DestinationField from './DestinationField'
-import getRandomInt from './getRandomInt'
 import Animal from './Animal'
 import EntityHandler from './EntityHandler'
 import GameScore from './GameScore'
@@ -35,6 +34,7 @@ export default class GameHandler {
 		this.app.stage.sortableChildren = true
 
 		this.mainHero = new Player(this.app)
+		this.mainHero.spawn()
 
 		this.gameScore = new GameScore(this.app, this.mainHero)
 		this.gameScore.init()
@@ -50,9 +50,8 @@ export default class GameHandler {
 		const animalSpawner = new AnimalsSpawner(this.app, this.animals)
 		animalSpawner.init()
 
-		this.mainHero.spawn()
-
 		this.destinationField = new DestinationField(this.app)
+		this.destinationField.init()
 
 		this.app.ticker.add(() => {
 			if (this.mainHero === null || this.destinationField === null) {
@@ -85,7 +84,7 @@ export default class GameHandler {
 
 				if (
 					!animal.getDidReachDestination() &&
-					this.destinationField.isAnimalOnTheTerritory(animal)
+					this.destinationField.isEntityOnTheTerritory(animal)
 				) {
 					animal.setDidReachDestination(true)
 					this.gameScore?.incrementScore()

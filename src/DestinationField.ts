@@ -1,18 +1,16 @@
 import { Application, Graphics, Renderer } from 'pixi.js'
-import Animal from './Animal'
+import Entity from './Entity'
 
 export default class DestinationField {
 	private app: Application<Renderer>
 
-	private destinationFieldGraphics: Graphics
+	private destinationFieldGraphics: Graphics | null = null
 
 	constructor(app: Application<Renderer>) {
 		this.app = app
-
-		this.destinationFieldGraphics = this.create()
 	}
 
-	private create(): Graphics {
+	init(): void {
 		const newDestinationField: Graphics = new Graphics()
 			.rect(0, 0, 300, 500)
 			.fill(0xf0e68c)
@@ -25,12 +23,16 @@ export default class DestinationField {
 		this.app.stage.addChild(newDestinationField)
 		newDestinationField.zIndex = 1000
 
-		return newDestinationField
+		this.destinationFieldGraphics = newDestinationField
 	}
 
-	isAnimalOnTheTerritory(animal: Animal): boolean {
-		const animalX = animal.getX()
-		const animalY = animal.getY()
+	isEntityOnTheTerritory(entity: Entity): boolean {
+		if (this.destinationFieldGraphics == null) {
+			return false
+		}
+
+		const entityX = entity.getX()
+		const entityY = entity.getY()
 
 		const destinationFieldX = this.destinationFieldGraphics.x
 		const destinationFieldY = this.destinationFieldGraphics.y
@@ -39,10 +41,10 @@ export default class DestinationField {
 		const destinationFieldHeight = this.destinationFieldGraphics.height
 
 		if (
-			animalX >= destinationFieldX &&
-			animalX <= destinationFieldX + destinationFieldWidth &&
-			animalY >= destinationFieldY &&
-			animalY <= destinationFieldY + destinationFieldHeight
+			entityX >= destinationFieldX &&
+			entityX <= destinationFieldX + destinationFieldWidth &&
+			entityY >= destinationFieldY &&
+			entityY <= destinationFieldY + destinationFieldHeight
 		) {
 			return true
 		}
