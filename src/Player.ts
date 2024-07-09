@@ -2,8 +2,9 @@ import { Application, Graphics, Renderer } from 'pixi.js'
 import Animal from './Animal'
 import Entity from './Entity'
 import HasScore from './HasScore'
+import HasAnimalGroup from './HasAnimalGroup'
 
-export default class Player implements Entity, HasScore {
+export default class Player implements Entity, HasScore, HasAnimalGroup {
 	private app: Application<Renderer>
 
 	private playerGraphics: Graphics | null = null
