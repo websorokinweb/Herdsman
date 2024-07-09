@@ -13,6 +13,10 @@ export class Animal implements Entity {
 	}
 
 	spawn(x: number, y: number): void {
+		if (this.animalGraphics != null) {
+			return
+		}
+
 		const animalGraphic = new Graphics().circle(0, 0, 20).fill(0xffffff)
 
 		animalGraphic.position.set(x, y)

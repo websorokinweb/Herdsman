@@ -16,6 +16,10 @@ export class Player implements Entity {
 	}
 
 	spawn(): void {
+		if (this.playerGraphics != null) {
+			return
+		}
+
 		const newPlayer: Graphics = new Graphics().circle(0, 0, 25).fill(0xff0000)
 
 		newPlayer.position.set(
