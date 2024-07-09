@@ -1,7 +1,8 @@
 import { Application, Graphics, Renderer } from "pixi.js";
 import { Animal } from "./Animal";
+import { Entity } from "./Entity";
 
-export class Player {
+export class Player implements Entity {
   private app: Application<Renderer>;
 
   private playerGraphics: Graphics;
@@ -20,7 +21,7 @@ export class Player {
     this.animalsGroup = []
   }
 
-  private spawn(): Graphics{
+  spawn(): Graphics{
     const newPlayer: Graphics = new Graphics().circle(0, 0, 25).fill(0xff0000)
 
 		newPlayer.position.set(this.app.screen.width / 2, this.app.screen.height / 2)
@@ -37,7 +38,6 @@ export class Player {
 
   incrementScore(): void {
     this.score += 1
-    console.log('incrementScore', this.score)
   }
 
   move(x: number, y: number) {

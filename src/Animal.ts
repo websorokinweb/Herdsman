@@ -1,6 +1,7 @@
 import { Application, Graphics, Renderer } from "pixi.js";
+import { Entity } from "./Entity";
 
-export class Animal {
+export class Animal implements Entity {
   private app: Application<Renderer>;
 
   private animalGraphics: Graphics;
@@ -15,7 +16,7 @@ export class Animal {
     this.didReachDestination = false
   }
 
-  private spawn(x: number, y: number): Graphics{
+  spawn(x: number, y: number): Graphics{
     const animalGraphic = new Graphics().circle(0, 0, 20).fill(0xffffff)
 
 		animalGraphic.position.set(x, y)
