@@ -51,6 +51,22 @@ export class Animal implements Entity {
 		return this.animalGraphics.y
 	}
 
+	getWidth(): number {
+		if (this.animalGraphics == null) {
+			return NaN
+		}
+
+		return this.animalGraphics.width
+	}
+
+	getHeight(): number {
+		if (this.animalGraphics == null) {
+			return NaN
+		}
+
+		return this.animalGraphics.height
+	}
+
 	getDidReachDestination(): boolean {
 		return this.didReachDestination
 	}

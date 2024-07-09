@@ -65,6 +65,22 @@ export class Player implements Entity {
 		return this.playerGraphics.y
 	}
 
+	getWidth(): number {
+		if (this.playerGraphics == null) {
+			return NaN
+		}
+
+		return this.playerGraphics.width
+	}
+
+	getHeight(): number {
+		if (this.playerGraphics == null) {
+			return NaN
+		}
+
+		return this.playerGraphics.height
+	}
+
 	addAnimalToGroup(animal: Animal): void {
 		if (this.isAnimalInGroup(animal)) {
 			return
