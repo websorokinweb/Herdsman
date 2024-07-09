@@ -1,8 +1,8 @@
 import { Application, Graphics, Renderer } from 'pixi.js'
-import { Animal } from './Animal'
-import { Entity } from './Entity'
+import Animal from './Animal'
+import Entity from './Entity'
 
-export class Player implements Entity {
+export default class Player implements Entity {
 	private app: Application<Renderer>
 
 	private playerGraphics: Graphics | null = null

@@ -1,6 +1,6 @@
 import { Application, FederatedPointerEvent, Graphics, Renderer } from "pixi.js";
 
-export class GameField {
+export default class GameField {
   private app: Application<Renderer>;
 
   private gameFieldGraphics: Graphics;

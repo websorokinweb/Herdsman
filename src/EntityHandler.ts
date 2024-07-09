@@ -1,6 +1,6 @@
-import { Entity } from './Entity'
+import Entity from './Entity'
 
-export class EntityHandler {
+export default class EntityHandler {
 	static getDistanceBetweenEntities(entity1: Entity, entity2: Entity): number {
 		return Math.sqrt(
 			Math.pow(entity1.getX() - entity2.getX(), 2) +

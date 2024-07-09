@@ -1,10 +1,10 @@
 import { Application, FederatedPointerEvent, Renderer, Text } from 'pixi.js'
-import { GameField } from './GameField'
-import { Player } from './Player'
-import { DestinationField } from './DestinationField'
+import GameField from './GameField'
+import Player from './Player'
+import DestinationField from './DestinationField'
 import getRandomInt from './getRandomInt'
-import { Animal } from './Animal'
-import { EntityHandler } from './EntityHandler'
+import Animal from './Animal'
+import EntityHandler from './EntityHandler'
 
 export default class GameHandler {
 	private app: Application<Renderer>
