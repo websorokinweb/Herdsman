@@ -6,9 +6,7 @@ import getRandomInt from './getRandomInt'
 import Animal from './Animal'
 import EntityHandler from './EntityHandler'
 import GameScore from './GameScore'
-
-const MIN_ANIMALS_COUNT_TO_SPAWN: number = 6
-const MAX_ANIMALS_COUNT_TO_SPAWN: number = 12
+import { AnimalsSpawner } from './AnimalsSpawner'
 
 const ANIMAL_CAN_JOIN_GROUP_DISTANCE: number = 70
 const ANIMAL_TOO_FAR_FROM_MAIN_HERO_DISTANCE: number = 500
@@ -49,11 +47,15 @@ export default class GameHandler {
 
 		new GameField(this.app, onGameFieldPointerDown)
 
+		const addAnimal: (newAnimal: Animal) => void = (newAnimal: Animal) => {
+			this.animals.push(newAnimal)
+		}
+		const animalSpawner = new AnimalsSpawner(this.app, addAnimal)
+		animalSpawner.init()
+
 		this.mainHero.spawn()
 
 		this.destinationField = new DestinationField(this.app)
-
-		this.spawnAnimals()
 
 		this.app.ticker.add(() => {
 			if (this.mainHero === null || this.destinationField === null) {
@@ -68,12 +70,14 @@ export default class GameHandler {
 				const distanceToMainHero: number =
 					EntityHandler.getDistanceBetweenEntities(this.mainHero, animal)
 
-				const canAnimalJoinGroup: boolean = distanceToMainHero < ANIMAL_CAN_JOIN_GROUP_DISTANCE
+				const canAnimalJoinGroup: boolean =
+					distanceToMainHero < ANIMAL_CAN_JOIN_GROUP_DISTANCE
 				if (canAnimalJoinGroup) {
 					this.mainHero.addAnimalToGroup(animal)
 				}
 
-				const isAnimalTooFarFromMainHero: boolean = distanceToMainHero > ANIMAL_TOO_FAR_FROM_MAIN_HERO_DISTANCE
+				const isAnimalTooFarFromMainHero: boolean =
+					distanceToMainHero > ANIMAL_TOO_FAR_FROM_MAIN_HERO_DISTANCE
 				if (isAnimalTooFarFromMainHero) {
 					this.mainHero.removeAnimalFromGroup(animal)
 				}
@@ -91,18 +95,6 @@ export default class GameHandler {
 				}
 			}
 		})
-	}
-
-	private spawnAnimals(): void {
-		const animalsCount = getRandomInt(MIN_ANIMALS_COUNT_TO_SPAWN, MAX_ANIMALS_COUNT_TO_SPAWN)
-		for (let i = 0; i < animalsCount; i++) {
-			const x = Math.floor(Math.random() * this.getAppWidth())
-			const y = Math.floor(Math.random() * this.getAppHeight())
-
-			const newAnimal = new Animal(this.app)
-			newAnimal.spawn(x, y)
-			this.animals.push(newAnimal)
-		}
 	}
 
 	moveAnimalToPlayer(mainHero: Player, animal: Animal): void {
