@@ -1,15 +1,16 @@
 import { Application, Graphics, Renderer } from 'pixi.js'
 import Animal from './Animal'
 import Entity from './Entity'
+import HasScore from './HasScore'
 
-export default class Player implements Entity {
+export default class Player implements Entity, HasScore {
 	private app: Application<Renderer>
 
 	private playerGraphics: Graphics | null = null
 
 	private animalsGroup: Animal[] = []
 
-	protected score: number = 0
+	private score: number = 0
 
 	constructor(app: Application<Renderer>) {
 		this.app = app
@@ -31,14 +32,6 @@ export default class Player implements Entity {
 		newPlayer.zIndex = 2000
 
 		this.playerGraphics = newPlayer
-	}
-
-	getScore(): number {
-		return this.score
-	}
-
-	incrementScore(): void {
-		this.score += 1
 	}
 
 	move(x: number, y: number) {
@@ -79,6 +72,18 @@ export default class Player implements Entity {
 		}
 
 		return this.playerGraphics.height
+	}
+
+	getScore(): number {
+		return this.score
+	}
+
+	incrementScore(): void {
+		this.score += 1
+	}
+
+	setScore(score: number): void {
+		this.score = score
 	}
 
 	addAnimalToGroup(animal: Animal): void {

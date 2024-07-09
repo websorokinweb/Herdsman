@@ -5,6 +5,7 @@ import DestinationField from './DestinationField'
 import getRandomInt from './getRandomInt'
 import Animal from './Animal'
 import EntityHandler from './EntityHandler'
+import GameScore from './GameScore'
 
 export default class GameHandler {
 	private app: Application<Renderer>
@@ -12,6 +13,7 @@ export default class GameHandler {
 	private mainHero: Player | null = null
 	private destinationField: DestinationField | null = null
 	private animals: Animal[] = []
+	private gameScore: GameScore | null = null
 
 	constructor(app: Application<Renderer>) {
 		this.app = app
@@ -30,6 +32,9 @@ export default class GameHandler {
 
 		this.mainHero = new Player(this.app)
 
+		this.gameScore = new GameScore(this.app, this.mainHero)
+		this.gameScore.init()
+
 		const onGameFieldPointerDown = (
 			pointerDownEvent: FederatedPointerEvent,
 		) => {
@@ -43,28 +48,6 @@ export default class GameHandler {
 		this.destinationField = new DestinationField(this.app)
 
 		this.spawnAnimals()
-
-		let mainHeroScoreCounter: Text | null = null
-
-		const addMainHeroScoreCounter = (): Text => {
-			const mainHeroScoreCounter: Text = new Text({
-				text: '0',
-				style: {
-					fill: 0xffffff,
-					fontSize: 24,
-				},
-			})
-
-			mainHeroScoreCounter.position.set(10, 10)
-
-			mainHeroScoreCounter.zIndex = 9999
-
-			this.app.stage.addChild(mainHeroScoreCounter)
-
-			return mainHeroScoreCounter
-		}
-
-		mainHeroScoreCounter = addMainHeroScoreCounter()
 
 		this.app.ticker.add(() => {
 			if (this.mainHero === null || this.destinationField === null) {
@@ -97,7 +80,7 @@ export default class GameHandler {
 				) {
 					animal.setDidReachDestination(true)
 					this.mainHero.incrementScore()
-					mainHeroScoreCounter.text = this.mainHero.getScore()
+					this.gameScore?.updateScore()
 				}
 			}
 		})
