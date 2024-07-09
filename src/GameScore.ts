@@ -36,9 +36,15 @@ export default class GameScore {
 
 	setScore(score: number): void {
 		this.scoreOwner.setScore(score)
+		this.updateScore()
 	}
 
-	updateScore(): void {
+	incrementScore(): void {
+		this.setScore(this.getScore() + 1)
+		this.updateScore()
+	}
+
+	private updateScore(): void {
 		if (this.scoreCounterText === null) {
 			return
 		}

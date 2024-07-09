@@ -79,8 +79,7 @@ export default class GameHandler {
 					this.destinationField.isAnimalOnTheTerritory(animal)
 				) {
 					animal.setDidReachDestination(true)
-					this.mainHero.incrementScore()
-					this.gameScore?.updateScore()
+					this.gameScore?.incrementScore()
 				}
 			}
 		})
