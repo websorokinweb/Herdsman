@@ -2,10 +2,10 @@ import { Application, FederatedPointerEvent, Graphics, Text } from 'pixi.js'
 import { Animal } from './Animal'
 import addStyles from './addStyles'
 import { Player } from './Player'
-;import { DestinationField } from './DestinationField';
-import { GameField } from './GameField';
-import getRandomInt from './getRandomInt';
-(async () => {
+import { DestinationField } from './DestinationField'
+import { GameField } from './GameField'
+import getRandomInt from './getRandomInt'
+;(async () => {
 	const app = new Application()
 	await app.init({
 		resizeTo: window,
@@ -24,14 +24,15 @@ import getRandomInt from './getRandomInt';
 
 	const gameField: GameField = new GameField(app, onGameFieldPointerDown)
 	const mainHero: Player = new Player(app)
-  const destinationField: DestinationField = new DestinationField(app)
+	mainHero.spawn()
+	const destinationField: DestinationField = new DestinationField(app)
 
 	let mainHeroScoreCounter: Text | null = null
 	const animals: Animal[] = []
 
-  function onGameFieldPointerDown(pointerDownEvent: FederatedPointerEvent){
-    mainHero.move(pointerDownEvent.x, pointerDownEvent.y)
-  }
+	function onGameFieldPointerDown(pointerDownEvent: FederatedPointerEvent) {
+		mainHero.move(pointerDownEvent.x, pointerDownEvent.y)
+	}
 
 	// console.log(app.ticker.deltaTime)
 	// console.log(app.ticker.minFPS)
@@ -58,43 +59,44 @@ import getRandomInt from './getRandomInt';
 	mainHeroScoreCounter = addMainHeroScoreCounter()
 
 	function spawnAnimals() {
-    const animalsCount = getRandomInt(6, 12)
+		const animalsCount = getRandomInt(6, 12)
 		for (let i = 0; i < animalsCount; i++) {
 			const x = Math.floor(Math.random() * appWidth)
 			const y = Math.floor(Math.random() * appHeight)
 
-			const newAnimal = new Animal(app, x, y)
+			const newAnimal = new Animal(app)
+			newAnimal.spawn(x, y)
 			animals.push(newAnimal)
 		}
 	}
 
 	spawnAnimals()
 
-  function moveAnimalToPlayer(mainHero: Player, animal: Animal) {
-    const xDistance = mainHero.getX() - animal.getX()
-    const yDistance = mainHero.getY() - animal.getY()
+	function moveAnimalToPlayer(mainHero: Player, animal: Animal) {
+		const xDistance = mainHero.getX() - animal.getX()
+		const yDistance = mainHero.getY() - animal.getY()
 
-    let xDirection = 0
-    let yDirection = 0
+		let xDirection = 0
+		let yDirection = 0
 
-    if(xDistance != 0){
-      if(xDistance > 0){
-        xDirection = 1
-      } else {
-        xDirection = -1
-      }
-    }
+		if (xDistance != 0) {
+			if (xDistance > 0) {
+				xDirection = 1
+			} else {
+				xDirection = -1
+			}
+		}
 
-    if(yDistance != 0){
-      if(yDistance > 0){
-        yDirection = 1
-      } else {
-        yDirection = -1
-      }
-    }
+		if (yDistance != 0) {
+			if (yDistance > 0) {
+				yDirection = 1
+			} else {
+				yDirection = -1
+			}
+		}
 
-    animal.move(animal.getX() + xDirection, animal.getY() + yDirection)
-  }
+		animal.move(animal.getX() + xDirection, animal.getY() + yDirection)
+	}
 
 	app.ticker.add((ticker) => {
 		if (mainHero == null || mainHero == undefined) {
@@ -112,23 +114,26 @@ import getRandomInt from './getRandomInt';
 			)
 
 			if (distance < 70) {
-        mainHero.addAnimalToGroup(animal)
-      }
-      
-      if(distance > 600){
-        mainHero.removeAnimalFromGroup(animal)
-      }
+				mainHero.addAnimalToGroup(animal)
+			}
 
-      if(mainHero.isAnimalInGroup(animal)){
-        moveAnimalToPlayer(mainHero, animal)
-      }
+			if (distance > 600) {
+				mainHero.removeAnimalFromGroup(animal)
+			}
 
-      if (!animal.getDidReachDestination() && destinationField.isAnimalOnTheTerritory(animal)) {
-        animal.setDidReachDestination(true)
-        mainHero.incrementScore()
-        mainHeroScoreCounter.text = mainHero.getScore()
-        // mainHero.removeAnimalFromGroup(animal)
-      }
+			if (mainHero.isAnimalInGroup(animal)) {
+				moveAnimalToPlayer(mainHero, animal)
+			}
+
+			if (
+				!animal.getDidReachDestination() &&
+				destinationField.isAnimalOnTheTerritory(animal)
+			) {
+				animal.setDidReachDestination(true)
+				mainHero.incrementScore()
+				mainHeroScoreCounter.text = mainHero.getScore()
+				// mainHero.removeAnimalFromGroup(animal)
+			}
 		}
 	})
 })()

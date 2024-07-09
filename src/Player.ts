@@ -1,74 +1,85 @@
-import { Application, Graphics, Renderer } from "pixi.js";
-import { Animal } from "./Animal";
-import { Entity } from "./Entity";
+import { Application, Graphics, Renderer } from 'pixi.js'
+import { Animal } from './Animal'
+import { Entity } from './Entity'
 
 export class Player implements Entity {
-  private app: Application<Renderer>;
+	private app: Application<Renderer>
 
-  private playerGraphics: Graphics;
+	private playerGraphics: Graphics | null = null
 
-  private animalsGroup: Animal[];
+	private animalsGroup: Animal[] = []
 
-  protected score: number;
+	protected score: number = 0
 
-  constructor(app: Application<Renderer>) {
-    this.app = app
+	constructor(app: Application<Renderer>) {
+		this.app = app
+	}
 
-    this.playerGraphics = this.spawn()
+	spawn(): void {
+		const newPlayer: Graphics = new Graphics().circle(0, 0, 25).fill(0xff0000)
 
-    this.score = 0
-
-    this.animalsGroup = []
-  }
-
-  spawn(): Graphics{
-    const newPlayer: Graphics = new Graphics().circle(0, 0, 25).fill(0xff0000)
-
-		newPlayer.position.set(this.app.screen.width / 2, this.app.screen.height / 2)
+		newPlayer.position.set(
+			this.app.screen.width / 2,
+			this.app.screen.height / 2,
+		)
 
 		this.app.stage.addChild(newPlayer)
-    newPlayer.zIndex = 2000
+		newPlayer.zIndex = 2000
 
-		return newPlayer
-  }
+		this.playerGraphics = newPlayer
+	}
 
-  getScore(): number {
-    return this.score
-  }
+	getScore(): number {
+		return this.score
+	}
 
-  incrementScore(): void {
-    this.score += 1
-  }
+	incrementScore(): void {
+		this.score += 1
+	}
 
-  move(x: number, y: number) {
-    this.playerGraphics.position.set(x, y)
-  }
+	move(x: number, y: number) {
+		if (this.playerGraphics == null) {
+			return
+		}
 
-  getX(): number {
-    return this.playerGraphics.x
-  }
+		this.playerGraphics.position.set(x, y)
+	}
 
-  getY(): number {
-    return this.playerGraphics.y
-  }
+	getX(): number {
+		if (this.playerGraphics == null) {
+			return NaN
+		}
 
-  addAnimalToGroup(animal: Animal): void {
-    if(this.isAnimalInGroup(animal)) {
-      return
-    }
+		return this.playerGraphics.x
+	}
 
-    if(this.animalsGroup.length >= 5) {
-      return
-    }
+	getY(): number {
+		if (this.playerGraphics == null) {
+			return NaN
+		}
 
-    this.animalsGroup.push(animal)
-  }
+		return this.playerGraphics.y
+	}
 
-  removeAnimalFromGroup(animal: Animal): void {
-    this.animalsGroup = this.animalsGroup.filter((animalInGroup) => animalInGroup != animal)
-  }
+	addAnimalToGroup(animal: Animal): void {
+		if (this.isAnimalInGroup(animal)) {
+			return
+		}
 
-  isAnimalInGroup(animal: Animal): boolean {
-    return this.animalsGroup.includes(animal)
-  }
+		if (this.animalsGroup.length >= 5) {
+			return
+		}
+
+		this.animalsGroup.push(animal)
+	}
+
+	removeAnimalFromGroup(animal: Animal): void {
+		this.animalsGroup = this.animalsGroup.filter(
+			(animalInGroup) => animalInGroup != animal,
+		)
+	}
+
+	isAnimalInGroup(animal: Animal): boolean {
+		return this.animalsGroup.includes(animal)
+	}
 }

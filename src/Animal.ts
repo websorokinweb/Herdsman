@@ -1,49 +1,57 @@
-import { Application, Graphics, Renderer } from "pixi.js";
-import { Entity } from "./Entity";
+import { Application, Graphics, Renderer } from 'pixi.js'
+import { Entity } from './Entity'
 
 export class Animal implements Entity {
-  private app: Application<Renderer>;
+	private app: Application<Renderer>
 
-  private animalGraphics: Graphics;
+	private animalGraphics: Graphics | null = null
 
-  private didReachDestination: boolean;
-  
-  constructor(app: Application<Renderer>, x: number, y: number) { 
-    this.app = app
+	private didReachDestination: boolean = false
 
-    this.animalGraphics = this.spawn(x, y)
+	constructor(app: Application<Renderer>) {
+		this.app = app
+	}
 
-    this.didReachDestination = false
-  }
-
-  spawn(x: number, y: number): Graphics{
-    const animalGraphic = new Graphics().circle(0, 0, 20).fill(0xffffff)
+	spawn(x: number, y: number): Graphics {
+		const animalGraphic = new Graphics().circle(0, 0, 20).fill(0xffffff)
 
 		animalGraphic.position.set(x, y)
 
-    this.app.stage.addChild(animalGraphic)
-    animalGraphic.zIndex = 3000
+		this.app.stage.addChild(animalGraphic)
+		animalGraphic.zIndex = 3000
 
-    return animalGraphic
-  }
+		this.animalGraphics = animalGraphic
+	}
 
-  move(x: number, y: number) {
-    this.animalGraphics.position.set(x, y)
-  }
+	move(x: number, y: number) {
+		if (this.animalGraphics == null) {
+			return
+		}
 
-  getX(): number {
-    return this.animalGraphics.x
-  }
+		this.animalGraphics.position.set(x, y)
+	}
 
-  getY(): number {
-    return this.animalGraphics.y
-  }
+	getX(): number {
+		if (this.animalGraphics == null) {
+			return NaN
+		}
 
-  getDidReachDestination(): boolean {
-    return this.didReachDestination
-  }
+		return this.animalGraphics.x
+	}
 
-  setDidReachDestination(didReachDestination: boolean): void {
-    this.didReachDestination = didReachDestination
-  }
+	getY(): number {
+		if (this.animalGraphics == null) {
+			return NaN
+		}
+
+		return this.animalGraphics.y
+	}
+
+	getDidReachDestination(): boolean {
+		return this.didReachDestination
+	}
+
+	setDidReachDestination(didReachDestination: boolean): void {
+		this.didReachDestination = didReachDestination
+	}
 }
