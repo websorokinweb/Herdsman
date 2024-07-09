@@ -5,6 +5,7 @@ import { Player } from './Player'
 import { DestinationField } from './DestinationField'
 import { GameField } from './GameField'
 import getRandomInt from './getRandomInt'
+import { EntityHandler } from './EntityHandler'
 ;(async () => {
 	const app = new Application()
 	await app.init({
@@ -68,9 +69,18 @@ import getRandomInt from './getRandomInt'
 
 	spawnAnimals()
 
-	function moveAnimalToPlayer(mainHero: Player, animal: Animal) {
+	function moveAnimalToPlayer(mainHero: Player, animal: Animal): void {
 		const xDistance = mainHero.getX() - animal.getX()
 		const yDistance = mainHero.getY() - animal.getY()
+		const xAbsoluteDistance = Math.abs(xDistance)
+		const yAbsoluteDistance = Math.abs(yDistance)
+
+		if (
+			xAbsoluteDistance < mainHero.getWidth() &&
+			yAbsoluteDistance < mainHero.getHeight()
+		) {
+			return
+		}
 
 		let xDirection = 0
 		let yDirection = 0
@@ -104,16 +114,14 @@ import getRandomInt from './getRandomInt'
 		}
 
 		for (const animal of animals) {
-			const distance = Math.sqrt(
-				Math.pow(mainHero.getX() - animal.getX(), 2) +
-					Math.pow(mainHero.getY() - animal.getY(), 2),
-			)
+			const distanceToMainHero: number =
+				EntityHandler.getDistanceBetweenEntities(mainHero, animal)
 
-			if (distance < 70) {
+			if (distanceToMainHero < 70) {
 				mainHero.addAnimalToGroup(animal)
 			}
 
-			if (distance > 600) {
+			if (distanceToMainHero > 600) {
 				mainHero.removeAnimalFromGroup(animal)
 			}
 
