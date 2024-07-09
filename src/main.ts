@@ -75,10 +75,11 @@ import { EntityHandler } from './EntityHandler'
 		const xAbsoluteDistance = Math.abs(xDistance)
 		const yAbsoluteDistance = Math.abs(yDistance)
 
-		if (
+		const isAnimalTooCloseToHero: boolean =
 			xAbsoluteDistance < mainHero.getWidth() &&
 			yAbsoluteDistance < mainHero.getHeight()
-		) {
+
+		if (isAnimalTooCloseToHero) {
 			return
 		}
 
